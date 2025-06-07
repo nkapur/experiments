@@ -5,7 +5,7 @@ set -e
 PYTHON_VERSION="3.9.6"
 
 # Install system dependencies required for pyenv, Python builds, and Git
-sudo apt update && sudo apt install -y \
+apt update && apt install -y \
   make build-essential libssl-dev zlib1g-dev \
   libbz2-dev libreadline-dev libsqlite3-dev curl \
   libncursesw5-dev xz-utils tk-dev libxml2-dev \

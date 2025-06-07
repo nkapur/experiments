@@ -12,19 +12,27 @@ variable "region" {
 }
 
 variable "ami_name" {
-  default = "fastapi-test-ami"
+  default = "fastapi-test"
+}
+
+variable "app_version" {
+  description = "The version of the application"
+}
+
+variable "env" {
+  description = "The environment for the application (e.g., staging, production)"
 }
 
 source "amazon-ebs" "fastapi_test" {
   region                  = var.region
-  instance_type           = "t3.micro"
+  instance_type           = "c5.large"
   ssh_username            = "ubuntu"
-  ami_name                = var.ami_name# + "-" + timestamp(format: "YYYYMMDDHHMMSS")
+  ami_name                = join("-", [var.ami_name, var.env, var.app_version, formatdate("YYYYMMDDhhmmss", timestamp())])
   associate_public_ip_address = true
 
   source_ami_filter {
     filters = {
-      name                 = "ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"
+      name                = "ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"
       virtualization-type = "hvm"
       root-device-type    = "ebs"
     }
@@ -39,11 +47,12 @@ build {
 
   provisioner "shell" {
     inline = [
-      "sudo apt remove -y command-not-found",
-      "sudo rm -f /etc/apt/apt.conf.d/50command-not-found",
-      "sudo apt update",
-      "sudo apt install -y git curl"
+      "apt remove -y command-not-found",
+      "rm -f /etc/apt/apt.conf.d/50command-not-found",
+      "apt update",
+      "apt install -y git curl"
     ]
+    execute_command = "sudo -E bash '{{ .Path }}'"
   }
 
   provisioner "file" {
@@ -54,7 +63,7 @@ build {
   provisioner "shell" {
     inline = [
       "chmod +x /tmp/experiments/app/fastapi_test/deploy/packer/install.sh",
-      "bash /tmp/experiments/app/fastapi_test/deploy/packer/install.sh"
+      "sudo -E bash /tmp/experiments/app/fastapi_test/deploy/packer/install.sh"
     ]
   }
 }
