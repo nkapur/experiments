@@ -1,6 +1,8 @@
 # Developer Guidance
 
-To deploy an updated AMI instance locally, do the following:
+<b style="color:red">We have a Github workflow to create AMIs. The following is deprecated.</b>
+
+To deploy an updated AMI instance from local, do the following:
 
 ```
 cd app/fastapi_test/deploy/packer
