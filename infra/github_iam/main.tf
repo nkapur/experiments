@@ -3,6 +3,16 @@ variable "github_org" { default = "nkapur" }
 variable "github_repo" { default = "experiments" }
 variable "aws_region" { default = "us-west-2" }
 
+terraform {
+  backend "s3" {
+    bucket         = "experiments-infra-state"
+    key            = "infra/github-iam/terraform.tfstate"
+    region         = "us-west-2"
+    dynamodb_table = "terraform-locks"   # Optional for state locking
+    encrypt        = true
+  }
+}
+
 provider "aws" {
   region = var.aws_region
 }
