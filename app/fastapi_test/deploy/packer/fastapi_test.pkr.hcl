@@ -39,6 +39,18 @@ source "amazon-ebs" "fastapi_test" {
     owners      = ["099720109477"]
     most_recent = true
   }
+
+  # Tags that will be applied to the final AMI
+  ami_tags {
+    Project     = var.ami_name
+    CreatedBy   = "packer"
+  }
+
+  # Tags that will be applied to the temporary build EC2 instance
+  tags {
+    Project     = var.ami_name
+    CreatedBy   = "packer"
+  }
 }
 
 build {
