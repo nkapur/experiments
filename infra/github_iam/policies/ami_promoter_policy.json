@@ -6,8 +6,8 @@
       "Effect": "Allow",
       "Action": ["ssm:GetParameter", "ssm:PutParameter"],
       "Resource": [
-        "arn:aws:ssm:us-west-2:123456789012:parameter/ami/fastapi_test/*"
-    ]
+        "arn:aws:ssm:us-west-2:396724649279:parameter/ami/*/*"
+      ]
     }
   ]
 }

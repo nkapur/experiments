@@ -1,0 +1,76 @@
+name: Build and Register APP AMIs
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      app_version:
+        description: 'App version to deploy (optional if using a tag)'
+        required: true
+
+jobs:
+  build-ami:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    strategy:
+      matrix:
+        app: [fastapi_test]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate app_version input
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          VERSION="${{ github.event.inputs.app_version }}"
+          if [[ ! "$VERSION" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "❌ Invalid app_version format: $VERSION"
+            echo "Expected format: v<major>.<minor>.<patch> (e.g., v1.2.3)"
+            exit 1
+          fi
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::396724649279:role/github-ami-builder
+          aws-region: us-west-2
+
+      - name: Install Packer
+        uses: hashicorp/setup-packer@v3
+
+      - name: Determine app version
+        id: version
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" && -n "${{ github.event.inputs.app_version }}" ]]; then
+            echo "tag=${{ github.event.inputs.app_version }}" >> $GITHUB_OUTPUT
+          else
+            echo "tag=$(git describe --tags --abbrev=0 || echo dev)" >> $GITHUB_OUTPUT
+          fi
+          SHA=$(git rev-parse --short HEAD)
+          echo "sha=$SHA" >> $GITHUB_OUTPUT
+
+      - name: Build AMI
+        id: packer
+        run: |
+          cd app/${{ matrix.app }}/deploy/packer
+          echo "Running: packer build -var "app_version=${{ steps.version.outputs.tag }}" -machine-readable ."
+          packer init .
+          AMI_ID=$(packer build -var "app_version=${{ steps.version.outputs.tag }}" -machine-readable . | tee packer_output.log | grep 'artifact,0,id' | cut -d, -f6 | cut -d: -f2)
+          cat packer_output.log
+          if [[ -z "$AMI_ID" ]]; then
+            echo "❌ Failed to build AMI"
+            exit 1
+          fi
+          echo "ami_id=$AMI_ID" >> $GITHUB_OUTPUT
+
+      - name: Register AMI ID in SSM for staging
+        run: |
+          aws ssm put-parameter \
+            --name "/ami/${{ matrix.app }}/staging" \
+            --type "String" \
+            --overwrite \
+            --value "${{ steps.packer.outputs.ami_id }}"
