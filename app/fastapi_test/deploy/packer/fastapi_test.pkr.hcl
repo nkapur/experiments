@@ -19,15 +19,11 @@ variable "app_version" {
   description = "The version of the application"
 }
 
-variable "env" {
-  description = "The environment for the application (e.g., staging, production)"
-}
-
 source "amazon-ebs" "fastapi_test" {
   region                  = var.region
   instance_type           = "c5.large"
   ssh_username            = "ubuntu"
-  ami_name                = join("-", [var.ami_name, var.env, var.app_version, formatdate("YYYYMMDDhhmmss", timestamp())])
+  ami_name                = join("-", [var.ami_name, var.app_version, formatdate("YYYYMMDDhhmmss", timestamp())])
   associate_public_ip_address = true
 
   source_ami_filter {
