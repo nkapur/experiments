@@ -19,6 +19,22 @@ provider "aws" {
 
 data "aws_caller_identity" "current" {}
 
+
+######################################################################
+# OIDC Provider for GitHub Actions
+######################################################################
+resource "aws_iam_openid_connect_provider" "github_oidc" {
+  url = "https://token.actions.githubusercontent.com"
+
+  client_id_list = [
+    "sts.amazonaws.com",
+  ]
+
+  thumbprint_list = [
+    "6938fd4d98bab03faadb97b34396831e3780aea1", # This thumbprint may change, verify from GitHub documentation
+  ]
+}
+
 locals {
   github_oidc_assume_role_policy = jsonencode({
     Version = "2012-10-17",
@@ -26,7 +42,7 @@ locals {
       {
         Effect = "Allow",
         Principal = {
-          Federated = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:oidc-provider/token.actions.githubusercontent.com"
+          Federated = aws_iam_openid_connect_provider.github_oidc.arn
         },
         Action = "sts:AssumeRoleWithWebIdentity",
         Condition = {
@@ -38,6 +54,7 @@ locals {
     ]
   })
 }
+
 
 ######################################################################
 # Role for AMI creation/build workflows

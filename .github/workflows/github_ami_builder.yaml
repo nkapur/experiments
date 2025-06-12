@@ -36,7 +36,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::396724649279:role/github_ami_builder
+          role-to-assume: arn:aws:iam::396724649279:role/github-ami-builder
           aws-region: us-west-2
 
       - name: Install Packer
@@ -62,10 +62,10 @@ jobs:
           AMI_ID=$(packer build -var "app_version=${{ steps.version.outputs.tag }}" -var "git_sha=${{ steps.version.outputs.sha }}" -machine-readable . | tee packer_output.log | grep 'artifact,0,id' | cut -d, -f6 | cut -d: -f2)
           echo "ami_id=$AMI_ID" >> $GITHUB_OUTPUT
 
-      - name: Register AMI ID in SSM
+      - name: Register AMI ID in SSM for staging
         run: |
           aws ssm put-parameter \
-            --name "/ami/fastapi/prod" \
+            --name "/ami/${{ matrix.app }}/staging" \
             --type "String" \
             --overwrite \
             --value "${{ steps.packer.outputs.ami_id }}"
