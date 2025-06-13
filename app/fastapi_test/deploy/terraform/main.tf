@@ -74,18 +74,22 @@ resource "aws_security_group" "fastapi_test_sg" {
 
 
 resource "aws_instance" "fastapi_test_instance" {
+  for_each        = toset([
+      data.terraform_remote_state.experiments_apps_network.outputs.subnet_id_a,
+      data.terraform_remote_state.experiments_apps_network.outputs.subnet_id_b
+    ])  # Loop over each subnet
   ami             = data.aws_ssm_parameter.fastapi_test_ami.value
   instance_type   = "t3.small"
   key_name        = "investigate_fastapi_test_ec2"
   vpc_security_group_ids = [aws_security_group.fastapi_test_sg.id]
-  subnet_id      = data.terraform_remote_state.experiments_apps_network.outputs.subnet_id_a
+  subnet_id      = each.value
 
   # Associate the EC2 instance with an IAM role if necessary (for example, if it needs to access S3 or other AWS services)
   # iam_instance_profile = "your-iam-role"
 
   tags = {
     Project = var.app_name
-    Name    = "${var.app_name}-instance"
+    Name    = "${var.app_name}-instance in ${each.value}"  # Tag based on subnet ID
     CreatedBy = "terraform"
   }
 }
@@ -128,6 +132,13 @@ resource "aws_lb_target_group" "fastapi_test_target_group" {
   tags = {
     Name = "FastAPI Test App Target Group"
   }
+}
+
+resource "aws_lb_target_group_attachment" "fastapi_test_target_group_attachment" {
+  for_each          = aws_instance.fastapi_test_instance  # Loop over EC2 instances
+  target_group_arn  = aws_lb_target_group.fastapi_test_target_group.arn
+  target_id         = each.value.id  # EC2 instance ID
+  port              = 80
 }
 
 resource "aws_lb_listener" "fastapi_test_alb_listener" {
