@@ -71,7 +71,8 @@ build {
   provisioner "shell" {
     inline = [
       "chmod +x /tmp/experiments/app/fastapi_test/deploy/packer/install.sh",
-      "sudo -E bash /tmp/experiments/app/fastapi_test/deploy/packer/install.sh"
+      "sudo -u ubuntu -i bash /tmp/experiments/app/fastapi_test/deploy/packer/install.sh"
     ]
+    environment_vars = ["HOME=/home/ubuntu"]
   }
 }
