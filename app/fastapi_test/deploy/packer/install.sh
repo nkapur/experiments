@@ -53,7 +53,7 @@ After=network.target
 [Service]
 User=ubuntu
 WorkingDirectory=$APP_PATH
-ExecStart=$GUNICORN_PATH -w 4 -k uvicorn.workers.UvicornWorker main:src --bind 0.0.0.0:80
+ExecStart=$GUNICORN_PATH -w 4 -k uvicorn.workers.UvicornWorker main:app --bind 0.0.0.0:8000
 Restart=always
 Environment=PATH=$PYENV_ROOT/versions/$PYTHON_VERSION/bin:/usr/bin:/bin
 

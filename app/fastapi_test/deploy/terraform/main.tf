@@ -58,6 +58,13 @@ resource "aws_security_group" "fastapi_test_sg" {
   }
 
   ingress {
+    from_port   = 8000
+    to_port     = 8000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
@@ -116,14 +123,14 @@ resource "aws_lb" "fastapi_test_alb" {
 
 resource "aws_lb_target_group" "fastapi_test_target_group" {
   name     = "fastapi-test-target-group"
-  port     = 80
+  port     = 8000
   protocol = "HTTP"
   vpc_id   = data.terraform_remote_state.experiments_apps_network.outputs.vpc_id
 
   health_check {
     interval            = 30
     path                = "/health"
-    port                = "80"
+    port                = "8000"
     protocol            = "HTTP"
     timeout             = 5
     unhealthy_threshold = 2
@@ -138,7 +145,7 @@ resource "aws_lb_target_group_attachment" "fastapi_test_target_group_attachment"
   for_each          = aws_instance.fastapi_test_instance  # Loop over EC2 instances
   target_group_arn  = aws_lb_target_group.fastapi_test_target_group.arn
   target_id         = each.value.id  # EC2 instance ID
-  port              = 80
+  port              = 8000
 }
 
 resource "aws_lb_listener" "fastapi_test_alb_listener" {
