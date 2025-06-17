@@ -48,9 +48,20 @@ brew tap databricks/tap
 brew install databricks
 
 
-### .zshrc Setup ###
+### Kube Setup ###
+brew install kubectl
+brew install minikube
 
+# Install Kube convert for version management
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/darwin/arm64/kubectl-convert"\n
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/darwin/arm64/kubectl-convert.sha256"\n
+ echo "$(cat kubectl-convert.sha256)  kubectl-convert" | shasum -a 256 --check\n
+
+### .zshrc Setup ###
 echo <<EOF > ~/.zshrc
+autoload -Uz compinit
+compinit
+
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
 export PYENV_ROOT="$HOME/.pyenv"
@@ -60,11 +71,14 @@ eval "$(pyenv init -)"
 
 alias va="source .venv/bin/activate"
 alias vd="deactivate"
+
+export PATH="$HOME/bin:$PATH"
+source <(kubectl completion zsh)
 EOF
 source ~/.zshrc
 
 
-### Final Notes ###
+### Install Additional Tools ###
 echo "Base, Python, Cloud CLI and .zshrc setup complete. Please configure your clients with providers like Git, AWS, Databricks etc."
 
 echo "OPTIONAL: To test Github workflows locally, 
