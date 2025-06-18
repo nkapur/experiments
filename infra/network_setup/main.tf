@@ -40,16 +40,28 @@ resource "aws_subnet" "experiments_apps_subnet_public_b" {
 }
 
 # Create a private subnet
-resource "aws_subnet" "experiments_apps_subnet_private" {
+resource "aws_subnet" "experiments_apps_subnet_private_a" {
   vpc_id                  = aws_vpc.experiments_apps_vpc.id
   cidr_block              = "10.0.3.0/24"
   availability_zone       = "us-west-2b"
   map_public_ip_on_launch = false  # Do not automatically assign public IPs
 
   tags = {
-    Name = "Experiments Apps Private Subnet"
+    Name = "Experiments Apps Private Subnet A"
   }
 }
+
+resource "aws_subnet" "experiments_apps_subnet_private_b" {
+  vpc_id                  = aws_vpc.experiments_apps_vpc.id
+  cidr_block              = "10.0.4.0/24"
+  availability_zone       = "us-west-2a"
+  map_public_ip_on_launch = false  # Do not automatically assign public IPs
+
+  tags = {
+    Name = "Experiments Apps Private Subnet B"
+  }
+}
+
 
 # Create an Internet Gateway to enable internet access for public subnet
 resource "aws_internet_gateway" "experiments_apps_igw" {
@@ -93,4 +105,10 @@ output "subnet_id_a" {
 }
 output "subnet_id_b" {
   value = aws_subnet.experiments_apps_subnet_public_b.id
+}
+output "private_subnet_id_a" {
+  value = aws_subnet.experiments_apps_subnet_private_a.id
+}
+output "private_subnet_id_b" {
+  value = aws_subnet.experiments_apps_subnet_private_b.id
 }
