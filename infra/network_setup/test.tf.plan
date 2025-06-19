@@ -1,0 +1,357 @@
+{
+  "version": 4,
+  "terraform_version": "1.12.1",
+  "serial": 7,
+  "lineage": "b9daae24-296c-c372-3846-5255b161dd77",
+  "outputs": {
+    "subnet_id_a": {
+      "value": "subnet-00153edcdbb79876b",
+      "type": "string"
+    },
+    "subnet_id_b": {
+      "value": "subnet-0a0c11e90f0021451",
+      "type": "string"
+    },
+    "vpc_id": {
+      "value": "vpc-04cc446d4cc5d270c",
+      "type": "string"
+    }
+  },
+  "resources": [
+    {
+      "mode": "data",
+      "type": "aws_caller_identity",
+      "name": "current",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "account_id": "396724649279",
+            "arn": "arn:aws:iam::396724649279:user/navneet_laptop",
+            "id": "396724649279",
+            "user_id": "AIDAVYXVBXU7UWSCETTXR"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_internet_gateway",
+      "name": "experiments_apps_igw",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:ec2:us-west-2:396724649279:internet-gateway/igw-093b5216442cc905b",
+            "id": "igw-093b5216442cc905b",
+            "owner_id": "396724649279",
+            "tags": {
+              "Name": "Experiments Apps IGW"
+            },
+            "tags_all": {
+              "Name": "Experiments Apps IGW"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-04cc446d4cc5d270c"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxMjAwMDAwMDAwMDAwLCJkZWxldGUiOjEyMDAwMDAwMDAwMDAsInVwZGF0ZSI6MTIwMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "aws_vpc.experiments_apps_vpc"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_route_table",
+      "name": "experiments_apps_public_route_table",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:ec2:us-west-2:396724649279:route-table/rtb-0798c5df77b628ca6",
+            "id": "rtb-0798c5df77b628ca6",
+            "owner_id": "396724649279",
+            "propagating_vgws": [],
+            "route": [
+              {
+                "carrier_gateway_id": "",
+                "cidr_block": "0.0.0.0/0",
+                "core_network_arn": "",
+                "destination_prefix_list_id": "",
+                "egress_only_gateway_id": "",
+                "gateway_id": "igw-093b5216442cc905b",
+                "ipv6_cidr_block": "",
+                "local_gateway_id": "",
+                "nat_gateway_id": "",
+                "network_interface_id": "",
+                "transit_gateway_id": "",
+                "vpc_endpoint_id": "",
+                "vpc_peering_connection_id": ""
+              }
+            ],
+            "tags": {
+              "Name": "Experiments Apps Public Route Table"
+            },
+            "tags_all": {
+              "Name": "Experiments Apps Public Route Table"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-04cc446d4cc5d270c"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "aws_internet_gateway.experiments_apps_igw",
+            "aws_vpc.experiments_apps_vpc"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_route_table_association",
+      "name": "experiments_apps_public_route_table_association_a",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "gateway_id": "",
+            "id": "rtbassoc-09f7374754f28878c",
+            "route_table_id": "rtb-0798c5df77b628ca6",
+            "subnet_id": "subnet-00153edcdbb79876b",
+            "timeouts": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "aws_internet_gateway.experiments_apps_igw",
+            "aws_route_table.experiments_apps_public_route_table",
+            "aws_subnet.experiments_apps_subnet_public_a",
+            "aws_vpc.experiments_apps_vpc"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_route_table_association",
+      "name": "experiments_apps_public_route_table_association_b",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "gateway_id": "",
+            "id": "rtbassoc-0409084a4348576cc",
+            "route_table_id": "rtb-0798c5df77b628ca6",
+            "subnet_id": "subnet-0a0c11e90f0021451",
+            "timeouts": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "aws_internet_gateway.experiments_apps_igw",
+            "aws_route_table.experiments_apps_public_route_table",
+            "aws_subnet.experiments_apps_subnet_public_b",
+            "aws_vpc.experiments_apps_vpc"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_subnet",
+      "name": "experiments_apps_subnet_private",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:us-west-2:396724649279:subnet/subnet-00991814df5a5bd99",
+            "assign_ipv6_address_on_creation": false,
+            "availability_zone": "us-west-2b",
+            "availability_zone_id": "usw2-az2",
+            "cidr_block": "10.0.3.0/24",
+            "customer_owned_ipv4_pool": "",
+            "enable_dns64": false,
+            "enable_lni_at_device_index": 0,
+            "enable_resource_name_dns_a_record_on_launch": false,
+            "enable_resource_name_dns_aaaa_record_on_launch": false,
+            "id": "subnet-00991814df5a5bd99",
+            "ipv6_cidr_block": "",
+            "ipv6_cidr_block_association_id": "",
+            "ipv6_native": false,
+            "map_customer_owned_ip_on_launch": false,
+            "map_public_ip_on_launch": false,
+            "outpost_arn": "",
+            "owner_id": "396724649279",
+            "private_dns_hostname_type_on_launch": "ip-name",
+            "tags": {
+              "Name": "Experiments Apps Private Subnet"
+            },
+            "tags_all": {
+              "Name": "Experiments Apps Private Subnet"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-04cc446d4cc5d270c"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6MTIwMDAwMDAwMDAwMH0sInNjaGVtYV92ZXJzaW9uIjoiMSJ9",
+          "dependencies": [
+            "aws_vpc.experiments_apps_vpc"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_subnet",
+      "name": "experiments_apps_subnet_public_a",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:us-west-2:396724649279:subnet/subnet-00153edcdbb79876b",
+            "assign_ipv6_address_on_creation": false,
+            "availability_zone": "us-west-2a",
+            "availability_zone_id": "usw2-az1",
+            "cidr_block": "10.0.1.0/24",
+            "customer_owned_ipv4_pool": "",
+            "enable_dns64": false,
+            "enable_lni_at_device_index": 0,
+            "enable_resource_name_dns_a_record_on_launch": false,
+            "enable_resource_name_dns_aaaa_record_on_launch": false,
+            "id": "subnet-00153edcdbb79876b",
+            "ipv6_cidr_block": "",
+            "ipv6_cidr_block_association_id": "",
+            "ipv6_native": false,
+            "map_customer_owned_ip_on_launch": false,
+            "map_public_ip_on_launch": true,
+            "outpost_arn": "",
+            "owner_id": "396724649279",
+            "private_dns_hostname_type_on_launch": "ip-name",
+            "tags": {
+              "Name": "Experiments Apps Public Subnet A"
+            },
+            "tags_all": {
+              "Name": "Experiments Apps Public Subnet A"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-04cc446d4cc5d270c"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6MTIwMDAwMDAwMDAwMH0sInNjaGVtYV92ZXJzaW9uIjoiMSJ9",
+          "dependencies": [
+            "aws_vpc.experiments_apps_vpc"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_subnet",
+      "name": "experiments_apps_subnet_public_b",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:us-west-2:396724649279:subnet/subnet-0a0c11e90f0021451",
+            "assign_ipv6_address_on_creation": false,
+            "availability_zone": "us-west-2b",
+            "availability_zone_id": "usw2-az2",
+            "cidr_block": "10.0.2.0/24",
+            "customer_owned_ipv4_pool": "",
+            "enable_dns64": false,
+            "enable_lni_at_device_index": 0,
+            "enable_resource_name_dns_a_record_on_launch": false,
+            "enable_resource_name_dns_aaaa_record_on_launch": false,
+            "id": "subnet-0a0c11e90f0021451",
+            "ipv6_cidr_block": "",
+            "ipv6_cidr_block_association_id": "",
+            "ipv6_native": false,
+            "map_customer_owned_ip_on_launch": false,
+            "map_public_ip_on_launch": true,
+            "outpost_arn": "",
+            "owner_id": "396724649279",
+            "private_dns_hostname_type_on_launch": "ip-name",
+            "tags": {
+              "Name": "Experiments Apps Public Subnet B"
+            },
+            "tags_all": {
+              "Name": "Experiments Apps Public Subnet B"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-04cc446d4cc5d270c"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6MTIwMDAwMDAwMDAwMH0sInNjaGVtYV92ZXJzaW9uIjoiMSJ9",
+          "dependencies": [
+            "aws_vpc.experiments_apps_vpc"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_vpc",
+      "name": "experiments_apps_vpc",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:us-west-2:396724649279:vpc/vpc-04cc446d4cc5d270c",
+            "assign_generated_ipv6_cidr_block": false,
+            "cidr_block": "10.0.0.0/16",
+            "default_network_acl_id": "acl-0e6aa7e752e8144d2",
+            "default_route_table_id": "rtb-0fee86e32106ae393",
+            "default_security_group_id": "sg-05b7e70e619f67f8c",
+            "dhcp_options_id": "dopt-6645c60d",
+            "enable_dns_hostnames": true,
+            "enable_dns_support": true,
+            "enable_network_address_usage_metrics": false,
+            "id": "vpc-04cc446d4cc5d270c",
+            "instance_tenancy": "default",
+            "ipv4_ipam_pool_id": null,
+            "ipv4_netmask_length": null,
+            "ipv6_association_id": "",
+            "ipv6_cidr_block": "",
+            "ipv6_cidr_block_network_border_group": "",
+            "ipv6_ipam_pool_id": "",
+            "ipv6_netmask_length": 0,
+            "main_route_table_id": "rtb-0fee86e32106ae393",
+            "owner_id": "396724649279",
+            "tags": {
+              "Name": "FastAPI Test VPC"
+            },
+            "tags_all": {
+              "Name": "FastAPI Test VPC"
+            }
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjEifQ=="
+        }
+      ]
+    }
+  ],
+  "check_results": null
+}
+
