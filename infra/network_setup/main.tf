@@ -12,7 +12,7 @@ resource "aws_vpc" "experiments_apps_vpc" {
   enable_dns_hostnames = true  # Allow DNS hostnames to be assigned to instances
 
   tags = {
-    Name = "FastAPI Test VPC"
+    Name = "Experiments Apps VPC"
   }
 }
 
@@ -94,21 +94,4 @@ resource "aws_route_table_association" "experiments_apps_public_route_table_asso
 resource "aws_route_table_association" "experiments_apps_public_route_table_association_b" {
   subnet_id      = aws_subnet.experiments_apps_subnet_public_b.id
   route_table_id = aws_route_table.experiments_apps_public_route_table.id
-}
-
-# Outputs for VPC and Subnet
-output "vpc_id" {
-  value = aws_vpc.experiments_apps_vpc.id
-}
-output "subnet_id_a" {
-  value = aws_subnet.experiments_apps_subnet_public_a.id
-}
-output "subnet_id_b" {
-  value = aws_subnet.experiments_apps_subnet_public_b.id
-}
-output "private_subnet_id_a" {
-  value = aws_subnet.experiments_apps_subnet_private_a.id
-}
-output "private_subnet_id_b" {
-  value = aws_subnet.experiments_apps_subnet_private_b.id
 }
