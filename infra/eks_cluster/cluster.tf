@@ -24,6 +24,7 @@ module "eks" {
   ]
 
   enable_cluster_creator_admin_permissions = true
+  cluster_endpoint_public_access = true
 
   # By default, the EKS module will create and manage the necessary IAM roles
   # for the node groups. This is the recommended approach.
