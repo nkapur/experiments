@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# Get the name of the branch being pushed
+current_branch=$(git rev-parse --abbrev-ref HEAD)
+
+if [ "$current_branch" = "master" ]; then
+  echo "-------------------------------------------------------"
+  echo "ERROR: You are trying to push directly to the 'master' branch."
+  echo "Direct pushes to 'master' are not allowed."
+  echo "Please create a new branch, commit your changes, and then"
+  echo "create a pull request on GitHub."
+  echo "-------------------------------------------------------"
+  exit 1 # This stops the push
+fi
+
+exit 0 # This allows the push on any other branch
