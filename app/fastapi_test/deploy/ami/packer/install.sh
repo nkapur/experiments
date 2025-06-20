@@ -18,7 +18,7 @@ PYTHON_VERSION=$(python --version | awk '{print $2}')
 # Clone or copy monorepo to user-writable location
 MONOREPO_PATH="$HOME/experiments"
 rm -rf $MONOREPO_PATH
-cp -r $SCRIPT_DIR/../../../../../experiments $MONOREPO_PATH
+cp -r $SCRIPT_DIR/../../../../../../experiments $MONOREPO_PATH
 
 APP_PATH="$MONOREPO_PATH/app/$APP_NAME"
 if [ ! -d "$APP_PATH" ]; then

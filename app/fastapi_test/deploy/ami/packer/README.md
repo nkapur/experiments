@@ -5,7 +5,7 @@
 To deploy an updated AMI instance from local, do the following:
 
 ```
-cd app/fastapi_test/deploy/packer
+cd app/fastapi_test/deploy/ami/packer
 packer init .
 packer build -var-file=staging.pkrvars.hcl .
 ```
