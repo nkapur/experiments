@@ -18,7 +18,7 @@ PYTHON_VERSION=$(python --version | awk '{print $2}')
 # Clone or copy monorepo to user-writable location
 MONOREPO_PATH="$HOME/experiments"
 rm -rf $MONOREPO_PATH
-cp -r $SCRIPT_DIR/../../../../../experiments $MONOREPO_PATH
+cp -r $SCRIPT_DIR/../../../../../../experiments $MONOREPO_PATH
 
 APP_PATH="$MONOREPO_PATH/app/$APP_NAME"
 if [ ! -d "$APP_PATH" ]; then
@@ -53,7 +53,7 @@ After=network.target
 [Service]
 User=ubuntu
 WorkingDirectory=$APP_PATH
-ExecStart=$GUNICORN_PATH -w 4 -k uvicorn.workers.UvicornWorker main:app --bind 0.0.0.0:8000
+ExecStart=$GUNICORN_PATH -w 4 -k uvicorn.workers.UvicornWorker src.main:app --bind 0.0.0.0:8000
 Restart=always
 Environment=PATH=$PYENV_ROOT/versions/$PYTHON_VERSION/bin:/usr/bin:/bin
 

@@ -63,15 +63,22 @@ build {
     execute_command = "sudo -E bash '{{ .Path }}'"
   }
 
+  # Prep the folder for the FastAPI application
+  provisioner "shell" {
+    inline = [
+      "mkdir -p /tmp/experiments/app"
+    ]
+  }
+
   provisioner "file" {
-    source      = "../../../../../experiments"
-    destination = "/tmp/experiments"
+    source      = "../../../../../../experiments/app/fastapi_test"
+    destination = "/tmp/experiments/app/fastapi_test"
   }
 
   provisioner "shell" {
     inline = [
-      "chmod +x /tmp/experiments/app/fastapi_test/deploy/packer/install.sh",
-      "sudo -u ubuntu -i bash /tmp/experiments/app/fastapi_test/deploy/packer/install.sh"
+      "chmod +x /tmp/experiments/app/fastapi_test/deploy/ami/packer/install.sh",
+      "sudo -u ubuntu -i bash /tmp/experiments/app/fastapi_test/deploy/ami/packer/install.sh"
     ]
     environment_vars = ["HOME=/home/ubuntu"]
   }
