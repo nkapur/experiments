@@ -18,11 +18,11 @@ ECR_REPO="396724649279.dkr.ecr.us-west-2.amazonaws.com/$APP_NAME"  # TODO: ECR r
 # Simple Arrays
 declare -a commands=(
   "git fetch; git checkout -b $WORKING_BRANCH $RELEASE_VERSION"
-  "docker build -t $APP_NAME:latest ."
-  "docker tag $APP_NAME:latest $ECR_REPO:latest"
-  "docker tag $APP_NAME:latest $ECR_REPO:$RELEASE_VERSION"
-  "docker push $ECR_REPO:latest"
-  "docker push $ECR_REPO:$RELEASE_VERSION"
+  "docker buildx build --platform=linux/amd64 -t $APP_NAME:latest-amd64 --load ."
+  "docker tag $APP_NAME:latest-amd64 $ECR_REPO:latest-amd64"
+  "docker tag $APP_NAME:latest-amd64 $ECR_REPO:$RELEASE_VERSION-amd64"
+  "docker push $ECR_REPO:latest-amd64"
+  "docker push $ECR_REPO:$RELEASE_VERSION-amd64"
   "git checkout $CURRENT_BRANCH; git branch -D $WORKING_BRANCH"
 )
 declare -a error_messages=(
