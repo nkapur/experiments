@@ -1,4 +1,10 @@
 #!/usr/bin/env bash
+
+# Docker build script for FastAPI application using the most recent release tag.
+# This script is expected to run in an app-specific CI/CD pipeline currently, it
+# is designed to be easy to parameterize and generalize into the beginnings of a build
+# and/or deploy platform.
+
 SCRIPT_PATH=$0
 SCRIPT_DIR=$(dirname "$0")
 APP_NAME="fastapi_test"
