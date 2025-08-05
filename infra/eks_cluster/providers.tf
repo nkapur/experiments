@@ -11,6 +11,8 @@ provider "aws" {
   region = "us-west-2"  # Specify your AWS region
 }
 
+data "aws_caller_identity" "current" {}
+
 # Data source to retrieve EKS cluster authentication details
 data "aws_eks_cluster_auth" "cluster" {
   name = module.eks.cluster_name
@@ -23,7 +25,7 @@ provider "kubernetes" {
 }
 
 provider "helm" {
-  kubernetes {
+  kubernetes = {
     host                   = module.eks.cluster_endpoint
     cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
     token                  = data.aws_eks_cluster_auth.cluster.token

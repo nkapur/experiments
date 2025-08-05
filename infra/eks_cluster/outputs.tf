@@ -13,3 +13,7 @@ output "staging_namespace" {
 output "prod_namespace" {
   value = kubernetes_namespace.prod.metadata[0].name
 }
+
+output "eks_cluster_oidc_issuer_url" {
+  value = module.eks.cluster_oidc_issuer_url
+}
