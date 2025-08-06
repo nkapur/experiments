@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapi-test-deployment
+  namespace: staging # TODO: Needs to be templated by deployment mode
+  labels:
+    app: fastapi-test-app
+spec:
+  replicas: 2 # You can adjust the number of replicas for scaling
+  selector:
+    matchLabels:
+      app: fastapi-test-app
+  template:
+    metadata:
+      labels:
+        app: fastapi-test-app
+    spec:
+      containers:
+      - name: fastapi-test-container
+        image: 396724649279.dkr.ecr.us-west-2.amazonaws.com/fastapi_test:v0.1.0-amd64 # TODO: Needs to be templated
+        ports:
+        - containerPort: 8000 # The port your FastAPI app listens on
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
