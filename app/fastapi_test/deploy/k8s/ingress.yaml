@@ -1,0 +1,60 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: fastapi-test-ingress
+  namespace: staging # TODO: Needs to be templated by deployment mode
+  annotations:
+    # Essential annotation to tell Kubernetes to use the ALB Ingress Controller
+    kubernetes.io/ingress.class: alb
+
+    # Scheme of the ALB: 'internet-facing' for public access, 'internal' for private VPC access
+    alb.ingress.kubernetes.io/scheme: internet-facing
+
+    # How the ALB will register targets: 'ip' (recommended for EKS with Amazon VPC CNI) or 'instance'
+    # 'ip' directly registers pod IPs; 'instance' registers node IPs and requires NodePort.
+    alb.ingress.kubernetes.io/target-type: ip
+
+    # (Optional) Listeners for the ALB. You can define HTTP, HTTPS, or both.
+    # If not specified, defaults to HTTP:80.
+    # Recommended to include HTTPS if you plan to use SSL/TLS.
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+
+    # (Optional) If you have an AWS ACM certificate, specify its ARN for HTTPS.
+    # Replace with your actual ACM certificate ARN.
+    # If you provide this, the ALB will terminate SSL/TLS.
+    # alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:<your-aws-region>:<your-account-id>:certificate/<certificate-id>
+
+    # (Optional) Redirect HTTP to HTTPS. Requires listen-ports to include both HTTP and HTTPS.
+    # Set this to "true" to force all HTTP traffic to HTTPS.
+    # alb.ingress.kubernetes.io/ssl-redirect: 'true'
+
+    # (Optional) Set a custom name for the ALB. Max 32 characters.
+    # alb.ingress.kubernetes.io/load-balancer-name: my-fastapi-test-alb
+
+    # (Optional) Health check path for the ALB. FastAPI typically serves '/' or '/health' for this.
+    # This should be an endpoint that reliably returns a 200 OK when your app is healthy.
+    alb.ingress.kubernetes.io/healthcheck-path: /
+
+    # (Optional) Tags for the provisioned ALB
+    # alb.ingress.kubernetes.io/tags: Environment=Production,Application=FastAPI
+
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-west-2:396724649279:certificate/77fbc603-20b8-46e0-a0ef-1c89bbe6f6a3
+    alb.ingress.kubernetes.io/actions.redirect-to-https: '{"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301" }}'
+  labels:
+    app: fastapi-test-app # Label for your Ingress, optional but good for organization
+spec:
+  # ingressClassName: alb # For Kubernetes 1.18+ and newer versions of ALB controller,
+                        # you might define an IngressClass and reference it here.
+                        # If you have 'kubernetes.io/ingress.class: alb' annotation,
+                        # this field might be redundant depending on your controller setup.
+  rules:
+  - host: fastapi-test.staging.navneetkapur.com  # TODO (navneetkapur): Needs templating
+    http:
+      paths:
+      - path: / # The path on the ALB you want to route. Use / for all traffic.
+        pathType: Prefix # Matches requests with a path starting with '/'. Other options: Exact, ImplementationSpecific
+        backend:
+          service:
+            name: fastapi-test-service # Name of your Kubernetes Service
+            port:
+              number: 80 # The 'port' defined in your Service (fastapi-test-service)

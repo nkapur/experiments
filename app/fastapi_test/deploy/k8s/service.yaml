@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: fastapi-test-service
+  namespace: staging # TODO: Needs to be templated by deployment mode
+  labels:
+    app: fastapi-test-app
+spec:
+  selector:
+    app: fastapi-test-app
+  ports:
+    - protocol: TCP
+      port: 80 # This is the port the Ingress will target for this service.
+      targetPort: 8000 # This must match the containerPort in your Deployment
+  type: ClusterIP
