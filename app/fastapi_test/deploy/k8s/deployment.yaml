@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: fastapi-test-container
-        image: 396724649279.dkr.ecr.us-west-2.amazonaws.com/fastapi_test:v0.1.0-amd64 # TODO: Needs to be templated
+        image: 396724649279.dkr.ecr.us-west-2.amazonaws.com/fastapi_test:v0.1.0-arm64 # TODO: Needs to be templated
         ports:
         - containerPort: 8000 # The port your FastAPI app listens on
         resources:
