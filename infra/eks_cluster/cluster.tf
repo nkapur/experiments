@@ -36,11 +36,11 @@ module "eks" {
     worker_compute = {
       # This node group will now use the IAM role created by the module above
       desired_size = 1
-      max_size     = 4
+      max_size     = 2
       min_size     = 1
 
-      ami_type       = "AL2023_x86_64_STANDARD"
-      instance_types = ["t3.medium"] # Corrected: Only one declaration
+      ami_type       = "AL2023_ARM_64_STANDARD"
+      instance_types = ["t4g.small"]
       key_name       = "eks_experiments_cluster_key"
       capacity_type  = "SPOT"
 
@@ -58,6 +58,5 @@ module "eks" {
     ManagedBy   = "Terraform"
   }
 
-  # --- Optional: Enable cluster logging (recommended for production) ---
-  cluster_enabled_log_types = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
+  cluster_enabled_log_types = ["api", "audit"]
 }
