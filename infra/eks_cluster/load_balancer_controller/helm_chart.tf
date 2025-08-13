@@ -3,7 +3,7 @@
 ################################################################################
 
 resource "helm_release" "aws_load_balancer_controller" {
-  name       = "aws-load-balancer-controller"
+  name       = "experiments-load-balancer-controller"
   repository = "https://aws.github.io/eks-charts"
   chart      = "aws-load-balancer-controller"
   namespace  = "kube-system"
@@ -24,15 +24,14 @@ resource "helm_release" "aws_load_balancer_controller" {
     }
   ]
 
-  # Add any other values you might need, e.g., enabling SSL redirects globally
-  # set {
-  #   name  = "defaultTags.Environment"
-  #   value = "production"
-  # }
-  # set {
-  #   name  = "ingressClass" # For K8s 1.18+
-  #   value = "alb"
-  # }
+  # ✅ If the install fails, automatically clean up the release
+  atomic  = true
+
+  # Wait for the pods to become ready before marking the install as successful
+  wait    = true
+
+  # Give it enough time to start up
+  timeout = 600
 
   # Ensure that the IAM role and service account are fully created before Helm tries to deploy
   depends_on = [
