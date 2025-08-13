@@ -40,7 +40,7 @@ module "eks" {
       min_size     = 1
 
       ami_type       = "AL2023_ARM_64_STANDARD"
-      instance_types = ["t4g.small"]
+      instance_types = ["t4g.micro", "t4g.small"]
       key_name       = "eks_experiments_cluster_key"
       capacity_type  = "SPOT"
 
@@ -58,5 +58,25 @@ module "eks" {
     ManagedBy   = "Terraform"
   }
 
-  cluster_enabled_log_types = ["api", "audit"]
+  # Set to false to prevent leaving behind log groups on destroy
+  create_cloudwatch_log_group = false
+
+  # cluster_enabled_log_types = ["api", "audit"]
+}
+
+resource "aws_eks_addon" "vpc_cni" {
+  # This creates an implicit dependency, ensuring the add-on is only
+  # managed after the cluster has been created.
+  cluster_name = module.eks.cluster_name
+  addon_name   = "vpc-cni"
+
+  # Pinning to a specific, recent version is a best practice.
+  # This version is compatible with EKS 1.31 and supports ARM64 (Graviton).
+  addon_version = "v1.20.0-eksbuild.1"
+
+  # This is the key to fixing your issue. It tells Terraform to
+  # forcefully overwrite any existing, stale, or conflicting CNI
+  # configurations on the cluster.
+  resolve_conflicts_on_create = "OVERWRITE"
+  resolve_conflicts_on_update = "OVERWRITE"
 }

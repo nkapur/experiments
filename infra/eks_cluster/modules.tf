@@ -14,4 +14,6 @@ module "load_balancer_controller" {
     data.terraform_remote_state.experiments_apps_network.outputs.private_subnet_id_a,
     data.terraform_remote_state.experiments_apps_network.outputs.private_subnet_id_b
   ]
+
+  depends_on = [module.eks]
 }
