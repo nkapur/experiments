@@ -58,10 +58,7 @@ module "eks" {
     ManagedBy   = "Terraform"
   }
 
-  # Set to false to prevent leaving behind log groups on destroy
-  create_cloudwatch_log_group = false
-
-  # cluster_enabled_log_types = ["api", "audit"]
+  cluster_enabled_log_types = ["api", "audit"]
 }
 
 resource "aws_eks_addon" "vpc_cni" {
