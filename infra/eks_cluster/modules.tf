@@ -1,3 +1,12 @@
+module "cluster_autoscaler" {
+  source = "./cluster_autoscaler"
+
+  # Pass the necessary values from your main configuration to the module
+  eks_cluster_name          = module.eks.cluster_name
+
+  depends_on = [module.eks]
+}
+
 module "load_balancer_controller" {
   source = "./load_balancer_controller" # This tells Terraform to look in the sub-folder
 
@@ -15,5 +24,5 @@ module "load_balancer_controller" {
     data.terraform_remote_state.experiments_apps_network.outputs.private_subnet_id_b
   ]
 
-  depends_on = [module.eks]
+  depends_on = [module.eks, module.cluster_autoscaler]
 }
