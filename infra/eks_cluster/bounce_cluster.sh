@@ -74,8 +74,6 @@ main() {
 
   if [ "$ACTION" == "up" ]; then
     terraform_up
-    # configure_kubectl
-    # apply_manifests
     echo "🎉 EKS cluster setup is complete!"
   elif [ "$ACTION" == "down" ] || [ "$ACTION" == "destroy" ]; then
     teardown

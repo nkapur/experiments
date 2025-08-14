@@ -76,7 +76,8 @@ resource "aws_eks_addon" "vpc_cni" {
 
   configuration_values = jsonencode({
     env = {
-      ENABLE_POD_ENI = "true"
+      ENABLE_POD_ENI = "true",
+      ENABLE_PREFIX_DELEGATION = "true"
     }
   })
 
