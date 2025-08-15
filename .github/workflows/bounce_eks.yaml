@@ -1,0 +1,36 @@
+name: Bounce EKS Cluster
+
+on:
+    workflow_dispatch:
+        inputs:
+            action:
+                description: "[up | down]"
+                required: true
+
+                
+jobs:
+    bounce-eks:
+        runs-on: ubuntu-latest
+        permissions:
+            id-token: write
+            contents: read
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Install Terraform
+              uses: hashicorp/setup-terraform@v3
+              with:
+                terraform_version: 1.12.1
+
+            - name: Install kubectl
+              uses: actions-hub/kubectl@master
+
+            - name: Configure AWS credentials
+              uses: aws-actions/configure-aws-credentials@v4
+              with:
+                  role-to-assume: arn:aws:iam::396724649279:role/github-eks-bouncer
+                  aws-region: us-west-2
+
+            - name: Bounce EKS Cluster
+              run: |
+                  ./infra/eks_cluster/bounce_cluster.sh
