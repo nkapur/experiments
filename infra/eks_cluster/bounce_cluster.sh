@@ -38,6 +38,7 @@ check_dependencies() {
 ## Function to provision the EKS cluster using Terraform
 terraform_up() {
   echo "🚀 Bringing up EKS cluster with Terraform..."
+  cd ${SCRIPT_DIR}
   terraform init
   terraform apply -auto-approve -target=module.eks
 
@@ -60,6 +61,7 @@ teardown() {
   if [[ $REPLY =~ ^[Yy]$ ]]
   then
     echo "🔥 Starting safe teardown process..."
+    cd ${SCRIPT_DIR}
     terraform destroy -auto-approve
     echo "✅ Teardown complete."
   fi
