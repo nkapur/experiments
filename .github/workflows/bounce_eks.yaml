@@ -22,8 +22,8 @@ jobs:
               with:
                 terraform_version: 1.12.1
 
-            - name: Install kubectl
-              uses: actions-hub/kubectl@master
+            # - name: Install kubectl
+            #   uses: actions-hub/kubectl@master
 
             - name: Configure AWS credentials
               uses: aws-actions/configure-aws-credentials@v4
