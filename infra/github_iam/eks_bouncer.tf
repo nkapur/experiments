@@ -24,7 +24,7 @@ resource "aws_iam_role_policy_attachment" "eks_service_policy" {
 
 # It contains only the specific permissions needed by the Terraform EKS module.
 resource "aws_iam_role_policy" "eks_creation_policy" {
-  name = "EKSCreationPolicy"
+  name = "EKSCreationAndStatePolicy"
   role = aws_iam_role.github_eks_bouncer.id
 
   policy = jsonencode({
@@ -67,6 +67,29 @@ resource "aws_iam_role_policy" "eks_creation_policy" {
           "iam:RemoveRoleFromInstanceProfile"
         ],
         Resource = "*"
+      },
+      {
+        Effect = "Allow",
+        Action = [
+          "s3:GetObject",
+          "s3:PutObject",
+          "s3:DeleteObject"
+        ],
+        Resource = "arn:aws:s3:::experiments-infra-state/infra/eks_cluster/terraform.tfstate"
+      },
+      {
+        Effect = "Allow",
+        Action = "s3:ListBucket",
+        Resource = "arn:aws:s3:::experiments-infra-state"
+      },
+      {
+        Effect = "Allow",
+        Action = [
+            "dynamodb:GetItem",
+            "dynamodb:PutItem",
+            "dynamodb:DeleteItem"
+        ],
+        Resource = "arn:aws:dynamodb:*:*:table/terraform-state-lock"
       }
     ]
   })
