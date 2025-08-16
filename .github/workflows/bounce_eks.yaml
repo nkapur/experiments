@@ -1,0 +1,11 @@
+name: Bounce EKS Cluster
+
+on:
+    workflow_dispatch:
+
+jobs:
+    placeholder:
+        runs-on: ubuntu-latest
+        steps:
+            - run: echo "Bouncing EKS Cluster"
+
