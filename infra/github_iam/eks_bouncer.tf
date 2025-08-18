@@ -107,6 +107,7 @@ resource "aws_iam_role_policy" "eks_creation_policy" {
           "iam:DeleteRole",
           "iam:DeleteUser",
           "iam:AttachRolePolicy",
+          "iam:DetachRolePolicy",
           "iam:PutRolePolicy",
           "iam:DeleteRolePolicy",
           "iam:PassRole",
@@ -128,8 +129,10 @@ resource "aws_iam_role_policy" "eks_creation_policy" {
           "iam:UntagOpenIDConnectProvider",
           "iam:GetOpenIDConnectProvider",
           "iam:ListOpenIDConnectProviders",
+          "iam:ListInstanceProfilesForRole",
           # Permissions for CloudWatch Log Group
           "logs:CreateLogGroup",
+          "logs:DeleteLogGroup",
           "logs:DescribeLogGroups",
           "logs:ListTagsForResource",
           "logs:TagResource",
