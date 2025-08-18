@@ -76,6 +76,7 @@ teardown() {
   if [[ $CONDITION_SATISFIED == true ]]; then
     echo "🔥 Starting safe teardown process..."
     cd ${SCRIPT_DIR}
+    terraform init
     terraform destroy -auto-approve
     echo "✅ Teardown complete."
   fi
