@@ -33,4 +33,4 @@ jobs:
 
             - name: Bounce EKS Cluster
               run: |
-                  ./infra/eks_cluster/bounce_cluster.sh
+                  ./infra/eks_cluster/bounce_cluster.sh ${{ github.event.inputs.action }} true
