@@ -38,6 +38,7 @@ check_dependencies() {
 ## Function to provision the EKS cluster using Terraform
 terraform_up() {
   echo "🚀 Bringing up EKS cluster with Terraform..."
+  cd ${SCRIPT_DIR}
   terraform init
   terraform apply -auto-approve -target=module.eks
 
@@ -51,15 +52,31 @@ terraform_up() {
 
 ## 🔽 NEW: Function to safely tear down the cluster
 teardown() {
+  # set up kubectl
+  aws eks update-kubeconfig --name $CLUSTER_NAME --region $AWS_REGION
+
   # Trigger poll_for_output and fail if response not as expected
   poll_for_output "kubectl get ingress -A" "No resources found"
 
   # TODO (navneetkapur): Convert to a automated check
-  read -p "Are you sure you have run kubectl delete on all the apps? (y/n) " -n 1 -r
+  
+  CONDITION_SATISFIED=false
+  if [[ $ON_RUNNER == true ]]; then
+    CONDITION_SATISFIED=true
+  else
+    # Check if the user has run kubectl delete on all the apps
+    echo "Please ensure you have run 'kubectl delete' on all the applications before proceeding."
+    read -p "Have you done that? (y/n) " -n 1 -r
+    echo # Move to a new line
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+      CONDITION_SATISFIED=true
+    fi
+  fi
 
-  if [[ $REPLY =~ ^[Yy]$ ]]
-  then
+  if [[ $CONDITION_SATISFIED == true ]]; then
     echo "🔥 Starting safe teardown process..."
+    cd ${SCRIPT_DIR}
+    terraform init
     terraform destroy -auto-approve
     echo "✅ Teardown complete."
   fi
@@ -67,8 +84,10 @@ teardown() {
 
 ##### Main Execution #####
 main() {
+
   # Default to "up" if no argument is provided
   ACTION=${1:-up}
+  ON_RUNNER=${2:-false}  # [LOCAL|GITHUB] Defaults to LOCAL
 
   check_dependencies
 
