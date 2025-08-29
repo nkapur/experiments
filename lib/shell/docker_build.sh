@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# DEPRECATED in favor of lib/shell/docker_build.sh
-
 # Docker build script for FastAPI application using the most recent release tag.
 # This script is expected to run in an app-specific CI/CD pipeline currently, it
 # is designed to be easy to parameterize and generalize into the beginnings of a build
@@ -9,8 +7,14 @@
 
 SCRIPT_PATH=$0
 SCRIPT_DIR=$(dirname "$0")
-APP_NAME="fastapi_test"
-cd "$SCRIPT_DIR"
+
+# APP_NAME is a commandline parameter
+APP_NAME="$1"
+
+WORKING_DIR="${SCRIPT_DIR}/../../app/${APP_NAME}"
+
+echo "Changing working directory to ${WORKING_DIR}"
+cd "${WORKING_DIR}"
 
 EPOCH=$(date +%s)
 CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
@@ -21,7 +25,12 @@ if [ -z "$RELEASE_VERSION" ]; then
   exit 1
 fi
 
-ECR_REPO="396724649279.dkr.ecr.us-west-2.amazonaws.com/$APP_NAME"  # TODO: ECR repository URL should be pulled in from SSM
+ECR_REPO_PREFIX="396724649279.dkr.ecr.us-west-2.amazonaws.com"
+ECR_REPO="$ECR_REPO_PREFIX/$APP_NAME"  # TODO: ECR repository URL should be pulled in from SSM
+
+
+aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin $ECR_REPO_PREFIX
+
 
 # Simple Arrays
 declare -a commands=(
