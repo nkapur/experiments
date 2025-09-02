@@ -10,7 +10,7 @@ terraform {
 # Invoke the shared module from your central repository
 module "fastapi_service" {
   # You can point to a local path, but a Git URL is best practice
-  source = "git::https://github.com/nkapur/platform-modules.git//app_platform/terraform_modules/fastapi_service?ref=v0.0.3"
+  source = "git::https://github.com/nkapur/platform-modules.git//app_platform/terraform_modules/fastapi_service?ref=v0.0.5"
 
   # --- Provide app-specific configuration ---
   app_name         = "auto_govern"
