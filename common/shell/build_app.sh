@@ -21,7 +21,7 @@ terraform apply \
 
 
 # --- BUILD AND INSTALL IMAGE ---
-./${SCRIPT_DIR}/../../lib/docker_build.sh $APP_NAME
+./${SCRIPT_DIR}/docker_build.sh $APP_NAME
 
 # --- TODO - Move below to bounce_app.sh. See example in fastapi_test ---
 # --- DEPLOY TO EKS ---
