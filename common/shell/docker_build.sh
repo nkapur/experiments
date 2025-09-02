@@ -5,8 +5,7 @@
 # is designed to be easy to parameterize and generalize into the beginnings of a build
 # and/or deploy platform.
 
-SCRIPT_PATH=$0
-SCRIPT_DIR=$(dirname "$0")
+SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
 
 # APP_NAME is a commandline parameter
 APP_NAME="$1"

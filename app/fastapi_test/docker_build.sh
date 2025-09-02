@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# DEPRECATED in favor of lib/shell/docker_build.sh
+# DEPRECATED in favor of common/shell/docker_build.sh
 
 # Docker build script for FastAPI application using the most recent release tag.
 # This script is expected to run in an app-specific CI/CD pipeline currently, it

@@ -22,7 +22,7 @@ function poll_for_output() {
   local cmd_to_run="$1"
   local expected_output="$2"
   local max_attempts=${3:-30} # Default to 30 attempts if not provided
-  local sleep_interval=10
+  local sleep_interval=${4:-10}
   local count=0
 
   echo "Polling for command to contain: \"$expected_output\""

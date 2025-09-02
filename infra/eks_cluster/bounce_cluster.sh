@@ -11,29 +11,8 @@ set -e
 
 # Source the polling utilities
 SCRIPT_DIR=$(dirname "$0")
+source "${SCRIPT_DIR}/../../lib/shell/base.sh"
 source "${SCRIPT_DIR}/../../lib/shell/polling_utils.sh"
-
-# Set the region where your EKS cluster is defined
-AWS_REGION="us-west-2"
-CLUSTER_NAME="experiments-kube-cluster"
-
-# Tooling Dependency pre-checks
-check_dependencies() {
-  echo "🔎 Checking for required tools (terraform, aws, kubectl)..."
-  if ! command -v terraform &> /dev/null; then
-    echo "❌ Error: terraform is not installed. Please install it first."
-    exit 1
-  fi
-  if ! command -v aws &> /dev/null; then
-    echo "❌ Error: aws-cli is not installed. Please install it first."
-    exit 1
-  fi
-  if ! command -v kubectl &> /dev/null; then
-    echo "❌ Error: kubectl is not installed. Please install it first."
-    exit 1
-  fi
-  echo "✅ All tools are present."
-}
 
 ## Function to provision the EKS cluster using Terraform
 terraform_up() {
