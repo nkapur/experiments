@@ -28,7 +28,7 @@ teardown() {
   kubectl delete -f $SCRIPT_DIR/k8s
 
   echo "Verifying ingress/LB resources are terminated..."
-  poll_for_output "kubectl get ingress ${INGRESS} -n ${NAMESPACE}" '"${INGRESS}" not found'
+  poll_for_output "kubectl get ingress ${INGRESS} -n ${NAMESPACE}" "\"$INGRESS\" not found"
 
   # Terraform destroy not recommended as TF sets up the container registry for the app which we still need
   echo "✅ Teardown complete."
