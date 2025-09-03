@@ -24,7 +24,7 @@ terraform apply \
 if [ -z "$RELEASE_VERSION" ]; then
   ${SCRIPT_DIR}/docker_build.sh $APP_NAME
 else
-  ${SCRIPT_DIR}/docker_build.sh $APP_NAME $RELEASE_VERSION
+  ${SCRIPT_DIR}/docker_build.sh $APP_NAME $RELEASE_VERSION true
 fi
 
 # --- TODO - Move below to bounce_app.sh. See example in fastapi_test ---

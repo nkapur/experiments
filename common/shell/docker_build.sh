@@ -9,16 +9,23 @@ SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
 
 # APP_NAME is a commandline parameter
 APP_NAME="$1"
+RELEASE_VERSION=${2:-$(gh release view --json tagName,name --jq '.tagName')}
+BUILD_FROM_ROOT=${3:-false}
 
-WORKING_DIR="${SCRIPT_DIR}/../../app/${APP_NAME}"
+# Set working directory based on where the script is located
+if [ "$BUILD_FROM_ROOT" = true ]; then
+  WORKING_DIR="${SCRIPT_DIR}/../../"
+  BUILDX_ARG="-f app/${APP_NAME}/Dockerfile"
+else
+  WORKING_DIR="${SCRIPT_DIR}/../../app/${APP_NAME}"
+  BUILDX_ARG="-f Dockerfile"
+fi
 
 echo "Changing working directory to ${WORKING_DIR}"
 cd "${WORKING_DIR}"
 
 EPOCH=$(date +%s)
 CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-RELEASE=$(gh release view --json tagName,name --jq '.tagName')
-RELEASE_VERSION=${2:-$RELEASE}
 WORKING_BRANCH=experiments-docker-build-$APP_NAME-$RELEASE_VERSION-$EPOCH
 if [ -z "$RELEASE_VERSION" ]; then
   echo "Release version not found. Please ensure you have a valid release tag."
@@ -35,7 +42,7 @@ aws ecr get-login-password --region us-west-2 | docker login --username AWS --pa
 # Simple Arrays
 declare -a commands=(
   "git fetch; git checkout -b $WORKING_BRANCH $RELEASE_VERSION"
-  "docker buildx build --platform=linux/arm64 -t $APP_NAME:latest-arm64 --load ."
+  "docker buildx build --platform=linux/arm64 $BUILDX_ARG -t $APP_NAME:latest-arm64 --load ."
   "docker tag $APP_NAME:latest-arm64 $ECR_REPO:latest-arm64"
   "docker tag $APP_NAME:latest-arm64 $ECR_REPO:$RELEASE_VERSION-arm64"
   "docker push $ECR_REPO:latest-arm64"
