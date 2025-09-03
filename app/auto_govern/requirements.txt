@@ -1,1 +1,1 @@
--r ../__cookie_cutter/requirements/base.txt
+-r ../../requirements/base.txt
