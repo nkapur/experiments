@@ -21,6 +21,9 @@ fi
 # Verify Local environment deps
 check_dependencies
 
+# set up kubectl
+aws eks update-kubeconfig --name $CLUSTER_NAME --region $AWS_REGION
+
 # Verify Kube cluster is healthy and accessible
 check_kube_cluster
 
