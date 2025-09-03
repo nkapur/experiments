@@ -25,17 +25,12 @@ data "aws_iam_policy_document" "app_deployer_assume_role" {
   }
 }
 
-resource "aws_iam_role" "app_deployer_role_prod" {
-  name = "AppDeployerRoleProd"
+resource "aws_iam_role" "app_deployer_role" {
+  for_each = var.deployer_roles
+  name     = each.value.name
 
   assume_role_policy = data.aws_iam_policy_document.app_deployer_assume_role.json
 }
-resource "aws_iam_role" "app_deployer_role_staging" {
-  name = "AppDeployerRoleStaging"
-
-  assume_role_policy = data.aws_iam_policy_document.app_deployer_assume_role.json
-}
-
 
 resource "aws_iam_policy" "app_deployer_policy" {
   name        = "AppDeployerPolicy"
@@ -67,12 +62,13 @@ resource "aws_iam_policy" "app_deployer_policy" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "app_deployer_attachment_staging" {
-  role       = aws_iam_role.app_deployer_role_staging.name
+resource "aws_iam_role_policy_attachment" "app_deployer_attachment" {
+  for_each   = var.deployer_roles
+  role       = aws_iam_role.app_deployer_role[each.key].name
   policy_arn = aws_iam_policy.app_deployer_policy.arn
 }
 
-resource "aws_iam_role_policy_attachment" "app_deployer_attachment_prod" {
-  role       = aws_iam_role.app_deployer_role_prod.name
-  policy_arn = aws_iam_policy.app_deployer_policy.arn
+output "deployer_role_arns" {
+  description = "The ARNs of the created IAM roles for deployers."
+  value       = { for k, role in aws_iam_role.app_deployer_role : k => role.arn }
 }
