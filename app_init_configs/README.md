@@ -23,8 +23,9 @@ cookiecutter __cookie_cutter__ --no-input \
     -o app/
 ```
 
-### Example Output
+### Output
 The new app folder `app/soothe` is ready to go
+
 <img width="357" height="329" alt="Soothe App Folder Added" src="https://github.com/user-attachments/assets/af60c7d1-121c-49e1-a49e-69a254549491" />
 
 
