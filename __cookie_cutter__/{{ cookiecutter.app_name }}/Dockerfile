@@ -1,5 +1,5 @@
 # Use a Python base image
-FROM python:3.9-slim-buster
+FROM python:{{ cookiecutter.python_version }}-slim-buster
 
 # Set the working directory in the container
 WORKDIR /app
@@ -8,13 +8,13 @@ WORKDIR /app
 COPY requirements/ ./requirements/
 
 # Copy the specific requirements.txt from its subfolder
-COPY app/auto_govern/requirements.txt .
+COPY app/{{ cookiecutter.app_name }}/requirements.txt .
 
 # Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy your FastAPI application code from its subfolder
-COPY app/auto_govern/ .
+COPY app/{{ cookiecutter.app_name }}/ .
 
 # Expose the port
 EXPOSE 8000
