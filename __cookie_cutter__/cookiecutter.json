@@ -1,0 +1,8 @@
+{
+  "app_name": "MANDATORY",
+  "project_slug": "{{ cookiecutter.app_name.lower().replace('_', '-') }}",
+  "python_version": "3.9",
+  "base_domain": "navneetkapur.com",
+  "terraform_backend_bucket": "MANDATORY",
+  "k8s_cluster_name": "MANDATORY"
+}

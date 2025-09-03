@@ -1,0 +1,21 @@
+# Staging values for the shared fastapi-service chart
+replicaCount: 1
+namespace: "staging"
+
+image:
+  # TODO (nkapur): Push this into the helm chart
+  repositoryName: "{{ cookiecutter.app_name }}"
+
+  # TODO (nkapur): This would be updated by your CI/CD pipeline
+  tag: "latest-arm64"  # v1.0.0-arm64
+
+ingress:
+  # TODO (nkapur): Push the construction of this into the helm chart
+  host: "{{ cookiecutter.project_slug }}.staging.{{ cookiecutter.base_domain }}"
+  annotations: {}
+  enabled: true
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
