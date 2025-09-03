@@ -17,7 +17,8 @@ cd "${WORKING_DIR}"
 
 EPOCH=$(date +%s)
 CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-RELEASE_VERSION=$(gh release view --json tagName,name --jq '.tagName')
+RELEASE=$(gh release view --json tagName,name --jq '.tagName')
+RELEASE_VERSION=${2:-$RELEASE}
 WORKING_BRANCH=experiments-docker-build-$APP_NAME-$RELEASE_VERSION-$EPOCH
 if [ -z "$RELEASE_VERSION" ]; then
   echo "Release version not found. Please ensure you have a valid release tag."

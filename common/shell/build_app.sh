@@ -1,13 +1,13 @@
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
 APP_NAME=$1
+RELEASE_VERSION=$2
 TERRAFORM_DIR="${SCRIPT_DIR}/../../app/${APP_NAME}/deploy/terraform"
 
-# Commandline argument: EKS Cluster Up or Not
-EKS_UP_FLAG=${2:-false}
+
 
 # Verify the input params are provided
-if [ -z "$APP_NAME" ] || [ -z "$EKS_UP_FLAG" ]; then
-  echo "Error: One or more of APP_NAME (=${APP_NAME}) or EKS_UP_FLAG (=${EKS_UP_FLAG}) is not set."
+if [ -z "$APP_NAME" ]; then
+  echo "Error: APP_NAME (=${APP_NAME}) is not set."
   exit 1
 fi
 
@@ -21,7 +21,11 @@ terraform apply \
 
 
 # --- BUILD AND INSTALL IMAGE ---
-${SCRIPT_DIR}/docker_build.sh $APP_NAME
+if [ -z "$RELEASE_VERSION" ]; then
+  ${SCRIPT_DIR}/docker_build.sh $APP_NAME
+else
+  ${SCRIPT_DIR}/docker_build.sh $APP_NAME $RELEASE_VERSION
+fi
 
 # --- TODO - Move below to bounce_app.sh. See example in fastapi_test ---
 # --- DEPLOY TO EKS ---
