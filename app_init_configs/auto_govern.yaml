@@ -1,0 +1,7 @@
+default_context:
+  app_name: "auto_govern"
+  # project_slug will be auto-generated from app_name by the template
+  python_version: "3.9"
+  base_domain: "navneetkapur.com"
+  terraform_backend_bucket: "experiments-infra-state"
+  k8s_cluster_name: "experiments-kube-cluster"

@@ -23,3 +23,4 @@ module "fastapi_service" {
 output "ecr_repository_url" {
   value = module.fastapi_service.ecr_repository_url
 }
+
