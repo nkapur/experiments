@@ -5,6 +5,7 @@ FROM python:{{ cookiecutter.python_version }}-slim-buster
 WORKDIR /app
 
 # Copy the requirements file and install dependencies
+COPY requirements/ ./requirements/
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
