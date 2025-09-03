@@ -38,3 +38,6 @@ It can similarly be deployed using
 ```sh
 ./common/shell/bounce_app.sh up soothe
 ```
+
+## End Result
+<img width="514" height="259" alt="Screenshot 2025-09-03 at 3 23 08 PM" src="https://github.com/user-attachments/assets/eb9039f2-1ea4-4866-a664-529353c4b9a0" />
