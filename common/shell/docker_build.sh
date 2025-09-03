@@ -9,8 +9,8 @@ SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
 
 # APP_NAME is a commandline parameter
 APP_NAME="$1"
-RELEASE_VERSION=${2:-$(gh release view --json tagName,name --jq '.tagName')}
-BUILD_FROM_ROOT=${3:-false}
+BUILD_FROM_ROOT=${2:-true}
+RELEASE_VERSION=${3:-$(gh release view --json tagName,name --jq '.tagName')}
 
 # Set working directory based on where the script is located
 if [ "$BUILD_FROM_ROOT" = true ]; then

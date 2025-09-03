@@ -25,4 +25,15 @@ cookiecutter __cookie_cutter__ --no-input \
 
 ### Example Output
 The new app folder `app/soothe` is ready to go
-<img width="357" height="329" alt="Screenshot 2025-09-02 at 10 47 42 PM" src="https://github.com/user-attachments/assets/af60c7d1-121c-49e1-a49e-69a254549491" />
+<img width="357" height="329" alt="Soothe App Folder Added" src="https://github.com/user-attachments/assets/af60c7d1-121c-49e1-a49e-69a254549491" />
+
+
+## What next?
+This app can be built using the following command from repo root
+```
+command/shell/build_app.sh soothe
+```
+It can similarly be deployed using
+```sh
+./command/shell/bounce_app up soothe
+```

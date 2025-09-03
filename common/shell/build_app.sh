@@ -3,8 +3,6 @@ APP_NAME=$1
 RELEASE_VERSION=$2
 TERRAFORM_DIR="${SCRIPT_DIR}/../../app/${APP_NAME}/deploy/terraform"
 
-
-
 # Verify the input params are provided
 if [ -z "$APP_NAME" ]; then
   echo "Error: APP_NAME (=${APP_NAME}) is not set."
@@ -24,7 +22,7 @@ terraform apply \
 if [ -z "$RELEASE_VERSION" ]; then
   ${SCRIPT_DIR}/docker_build.sh $APP_NAME
 else
-  ${SCRIPT_DIR}/docker_build.sh $APP_NAME $RELEASE_VERSION true
+  ${SCRIPT_DIR}/docker_build.sh $APP_NAME true $RELEASE_VERSION
 fi
 
 # --- TODO - Move below to bounce_app.sh. See example in fastapi_test ---
