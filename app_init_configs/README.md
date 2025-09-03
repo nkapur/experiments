@@ -32,9 +32,9 @@ The new app folder `app/soothe` is ready to go
 ## What next?
 This app can be built using the following command from repo root
 ```
-command/shell/build_app.sh soothe
+common/shell/build_app.sh soothe
 ```
 It can similarly be deployed using
 ```sh
-./command/shell/bounce_app up soothe
+./common/shell/bounce_app.sh up soothe
 ```
