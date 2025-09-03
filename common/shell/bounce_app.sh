@@ -27,6 +27,10 @@ aws eks update-kubeconfig --name $CLUSTER_NAME --region $AWS_REGION
 # Verify Kube cluster is healthy and accessible
 check_kube_cluster
 
+# Assume role to deploy the app
+DEPLOYMENT_ROLE_ARN="arn:aws:iam::396724649279:role/AppDeployerRole-${DEPLOYMENT_MODE}"
+aws sts assume-role --role-arn $DEPLOYMENT_ROLE_ARN --role-session-name $APP_NAME
+
 setup() {
     # --- PREP ---
     echo "Setting up Helm chart for $APP_NAME..."
