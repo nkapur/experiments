@@ -1,3 +1,33 @@
+
+# 1. Get a list of all IAM user names in the account.
+data "aws_iam_users" "all_users" {}
+
+# 2. For each user name, fetch its detailed information, including tags.
+#    The `for_each` meta-argument iterates over the set of user names.
+data "aws_iam_user" "user_details" {
+  for_each  = data.aws_iam_users.all_users.names
+  user_name = each.key
+}
+
+locals {
+  tag_key = "agent_user"
+  tag_value = "developer"
+
+  # 3. Filter the users and output the ARNs of those who have the target tag.
+  #    This `for` expression iterates through the user details we fetched.
+  #    The `if` clause checks if the user's tags map contains the target key-value pair.
+  developer_arns = [
+    for user in data.aws_iam_user.user_details : user.arn
+    if lookup(user.tags, local.tag_key, "") == local.tag_value
+  ]
+  service_arns = [
+              "arn:aws:iam::396724649279:user/staging-service-user",
+              "arn:aws:iam::396724649279:user/prod-service-user"
+  ]
+  developer_and_service_arns = concat(local.developer_arns, local.service_arns)
+}
+
+
 ######################################################################
 # IAM Role for EKS startup and tear-down
 ######################################################################
@@ -44,10 +74,7 @@ resource "aws_iam_role_policy" "eks_creation_policy" {
             "iam:DetachUserPolicy",
             "iam:PutUserPolicy",
           ],
-          Resource = [
-              "arn:aws:iam::396724649279:user/staging-service-user",
-              "arn:aws:iam::396724649279:user/prod-service-user"
-          ]
+          Resource = local.developer_and_service_arns
       },
       {
         Effect = "Allow",
@@ -188,4 +215,8 @@ resource "aws_iam_role_policy" "eks_creation_policy" {
 output "github_actions_role_arn" {
   value       = aws_iam_role.github_eks_bouncer.arn
   description = "The ARN of the IAM role for GitHub Actions"
+}
+
+output "developer_and_service_arns" {
+  value = local.developer_and_service_arns
 }
