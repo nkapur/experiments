@@ -3,28 +3,48 @@ This directory contains YAML files used by Cookiecutter to generate new FastAPI 
 
 ## How does this work?
 
-### Create a yaml file for the app
-app_init_configs/soothe.yaml
+### Initialize a new app using the app_init script
+
+The `scripts/app_init.py` script automates the process of creating app configurations and initializing new apps.
+
+#### Basic usage (uses default base config)
+```bash
+python scripts/app_init.py --app-name "my_app"
+```
+
+This will:
+- Use the default base configuration from `__default_base__.yaml`
+- Create a config file at `app_init_configs/my_app.yaml`
+- Generate the app directory at `app/my_app/`
+
+#### With additional configuration overrides
+```bash
+python scripts/app_init.py --app-name "my_app" \
+    --additional-configs '{"base_domain": "example.com", "python_version": "3.11"}'
+```
+
+#### With a custom base config file
+```bash
+python scripts/app_init.py --app-name "my_app" \
+    --base app_init_configs/custom_base.yaml
+```
+
+### Default base configuration
+
+The default base config (`__default_base__.yaml`) includes:
 ```yaml
 default_context:
-  app_name: "soothe"
-  # project_slug will be auto-generated from app_name by the template
+  app_name: "__default_app__"
   python_version: "3.9"
   base_domain: "navneetkapur.com"
   terraform_backend_bucket: "experiments-infra-state"
   k8s_cluster_name: "experiments-kube-cluster"
 ```
 
-### Run the following command 
-to initialize app folder
-```bash
-cookiecutter __cookie_cutter__ --no-input \
-    --config-file app_init_configs/soothe.yaml \
-    -o app/
-```
+Any values provided via `--additional-configs` will override these defaults.
 
 ### Output
-The new app folder `app/soothe` is ready to go
+The new app folder `app/my_app` is ready to go
 
 <img width="357" height="329" alt="Soothe App Folder Added" src="https://github.com/user-attachments/assets/af60c7d1-121c-49e1-a49e-69a254549491" />
 
