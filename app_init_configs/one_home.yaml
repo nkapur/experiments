@@ -1,0 +1,6 @@
+default_context:
+  app_name: one_home
+  base_domain: navneetkapur.com
+  k8s_cluster_name: experiments-kube-cluster
+  python_version: '3.9'
+  terraform_backend_bucket: experiments-infra-state
