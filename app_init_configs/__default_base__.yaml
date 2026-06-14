@@ -5,3 +5,4 @@ default_context:
   base_domain: "navneetkapur.com"
   terraform_backend_bucket: "experiments-infra-state"
   k8s_cluster_name: "experiments-kube-cluster"
+  deployment_fabric: "k8s"

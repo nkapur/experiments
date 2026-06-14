@@ -1,0 +1,6 @@
+# Registry of deployment fabrics and their scaffold paths (relative to app/<name>/).
+# Add new fabrics here when introducing additional deployment scaffolds.
+k8s:
+  deploy_paths:
+    - deploy/helm
+    - deploy/terraform
