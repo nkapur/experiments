@@ -17,6 +17,16 @@ This will:
 - Create a config file at `app_init_configs/my_app.yaml`
 - Generate the app directory at `app/my_app/`
 
+#### With a deployment fabric
+
+New apps scaffold deploy assets for a single fabric. Supported fabrics are defined in `__cookie_cutter__/deployment_fabrics.yaml` (currently `k8s` only).
+
+```bash
+python scripts/app_init.py --app-name "my_app" --deployment-fabric k8s
+```
+
+`k8s` is the default when the flag is omitted.
+
 #### With additional configuration overrides
 ```bash
 python scripts/app_init.py --app-name "my_app" \
@@ -39,9 +49,12 @@ default_context:
   base_domain: "navneetkapur.com"
   terraform_backend_bucket: "experiments-infra-state"
   k8s_cluster_name: "experiments-kube-cluster"
+  deployment_fabric: "k8s"
 ```
 
-Any values provided via `--additional-configs` will override these defaults.
+Any values provided via `--additional-configs` will override these defaults. The `--deployment-fabric` flag also sets `deployment_fabric` unless it is already provided in `--additional-configs`.
+
+To add a new fabric later, register it in `__cookie_cutter__/deployment_fabrics.yaml` and add the corresponding templates under `__cookie_cutter__/{{ cookiecutter.app_name }}/deploy/`.
 
 ### Output
 The new app folder `app/my_app` is ready to go

@@ -12,6 +12,10 @@ _repo_root = _script_dir.parent
 if str(_repo_root) not in sys.path:
     sys.path.insert(0, str(_repo_root))
 
+from scripts.deployment_fabrics import (
+    DEFAULT_DEPLOYMENT_FABRIC,
+    get_deployment_fabric_choices,
+)
 from scripts.utils.path_utils import get_repo_root, merge_dicts
 from scripts.utils.cookiecutter_utils import run_cookiecutter
 
@@ -44,14 +48,6 @@ def fetch_base_configs(base_yaml_path: str = None) -> dict:
         return yaml.safe_load(base_file)
 
 
-def fetch_app_configs(app_name: str, additional_configs: dict) -> dict:
-    arg_configs = {}
-    arg_configs["default_context"] = additional_configs
-    additional_configs["app_name"] = app_name
-    logger.info(f"Creating app configuration for app: {app_name}")
-    return arg_configs
-
-
 if __name__ == "__main__":
     
     parser = argparse.ArgumentParser(description="Init app")
@@ -59,15 +55,33 @@ if __name__ == "__main__":
 
     app_configs_group = parser.add_argument_group("App-specific configurations")
     app_configs_group.add_argument("--app-name", type=str, required=True, help="Name of the app")
+    app_configs_group.add_argument(
+        "--deployment-fabric",
+        type=str,
+        default=DEFAULT_DEPLOYMENT_FABRIC,
+        choices=get_deployment_fabric_choices(),
+        help="Deployment fabric to scaffold for the app (default: k8s)",
+    )
     app_configs_group.add_argument("--additional-configs", type=json.loads, default={}, help="Additional configurations in JSON format")
 
     args = parser.parse_args()
-    
+
+    additional_configs = args.additional_configs.copy()
+    additional_configs.setdefault("deployment_fabric", args.deployment_fabric)
+    valid_fabrics = get_deployment_fabric_choices()
+    if additional_configs["deployment_fabric"] not in valid_fabrics:
+        parser.error(
+            f"Invalid deployment_fabric: {additional_configs['deployment_fabric']}. "
+            f"Must be one of: {', '.join(valid_fabrics)}"
+        )
+
     logger.info("Loading base configuration")
     base_configs = fetch_base_configs(args.base)
-    app_configs = fetch_app_configs(args.app_name, args.additional_configs)
+    additional_configs["app_name"] = args.app_name
+    project_slug = args.app_name.lower()
     
-    project_slug = app_configs["default_context"]["app_name"].lower()
+    # Nesting under default_context to be compatible with cookiecutter templates 
+    app_configs = {"default_context": additional_configs}
     logger.info(f"App '{args.app_name}' and base configurations loaded (base from: {args.base or 'default location'})")
 
     # Does the app already exist??
